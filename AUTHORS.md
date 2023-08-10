@@ -6,3 +6,4 @@
 
 ## Contributors
 
+- Augusto Rodolpho Dalmás <augustodalmas132@gmail.com>

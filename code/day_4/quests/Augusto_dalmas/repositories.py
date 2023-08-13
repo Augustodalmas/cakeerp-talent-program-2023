@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-
+from schemas import CursoResponse
 from models import Curso
 
 class CursoRepository:
@@ -30,3 +30,13 @@ class CursoRepository:
         if curso is not None:
             db.delete(curso)
             db.commit()
+
+    @staticmethod
+    def update(db: Session, curso: Curso, request_data: CursoResponse):
+        for key, value in request_data.dict().items():
+            setattr(curso, key, value)
+        
+        db.commit()
+        db.refresh(curso)
+        
+        return curso

@@ -41,15 +41,26 @@ def delete_curso(curso_id: int, db: Session = Depends(get_db)):
 
 # Atualizar dados de um curso
 @app.put("/api/cursos/{curso_id}", response_model=CursoResponse)
-def update_curso(curso_id: int, request: CursoRequest, db: Session = Depends(get_db)):
-    curso = CursoRepository.find_by_id(db, curso_id)
+def update_curso(curso_id: int, request: CursoResponse, db: Session = Depends(get_db)):
+    curso = db.query(Curso).filter(Curso.id == curso_id).first()
     if not curso:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Curso não encontrado")
+        raise HTTPException(status_code=404, detail="Curso não encontrado")
     
     curso = CursoRepository.update(db, curso, request)
     
-    return CursoResponse.from_orm(curso)
+    return curso
 
+
+"""
+def update_curso(curso_id: int, request: CursoUpdate, db: Session = Depends(get_db)):
+    curso = db.query(Curso).filter(Curso.id == curso_id).first()
+    if not curso:
+        raise HTTPException(status_code=404, detail="Curso não encontrado")
+    
+    curso = CursoRepository.update(db, curso, request)
+    
+    return curso
+"""
 def custom_openapi():
     if app.openapi_schema:
         return app.openapi_schema
